@@ -14,7 +14,7 @@
 
 
 ## Indefinite article table / Unbestimmte Artikeltabelle
-### This is a Definite article table(Die Bestimmte Artikeltabelle) for germany language and this is one of the basis of my program.
+### This is a Indefinite article table(Die Unbestimmte Artikeltabelle) for germany language and this is one of the basis of my program.
 |Artikel |Singular maskulin|Singular feminin|Singular neutral|Plural|
 | :---: | :---: | :---: | :---: | :---: |
 | Nominativ | ein | eine | ein | *** |
