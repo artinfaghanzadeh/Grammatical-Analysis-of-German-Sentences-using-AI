@@ -4,7 +4,7 @@
 
 
 ## Article table / Artikel tabelle
-### This is a normal definite article table for germany language and this the base of my program.
+### This is a normal definite article table(Der Bestimmte Artikel) for germany language and this is the basis of my program.
 |Artikel |Singular maskulin|Singular feminin|Singular neutral|Plural|
 | :---: | :---: | :---: | :---: | :---: |
 | Nominativ | der | die | das | die |
