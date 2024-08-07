@@ -1,2 +1,3 @@
-# Grammatical Analysis of German Sentences using AI
- This project aims to analyze the grammatical structure of German sentences using artificial intelligence (AI). The process involves multiple steps to ensure accurate results.
+# Grammatische Analyse deutscher Sätze mittels KI / Grammatical Analysis of German Sentences using AI
+
+[Deutsch (German)](/docs/de/README.md) | [English](/docs/en/README.md)
