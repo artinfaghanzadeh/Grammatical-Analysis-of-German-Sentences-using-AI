@@ -33,5 +33,5 @@
 | Sie | ihr/ihren/ihrem/ihres | ihre/ihre/ihrer/ihrer | ihr/ihr/ihrem/ihres | ihre/ihre/ihren/ihrer |
 | Es | sein/seinen/seinem/seines | seine/seine/seiner/seiner | sein/sein/seinem/seines | seine/seine/seinen/seiner |
 | Wir | unser/unseren/unserem/unseres | unsere/unsere/unserer/unserer | unser/unser/unserem/unseres | unsere/unsere/unseren/unserer |
-| Ihr | euer/eueren/eurem/eures | euere/euere/eurer/euerer | euer/euer/eurem/eures | eure/eure/euren/eurer |
-| Sie/sie | Ihr.ihr/Ihren.ihren/Ihrem.Ihrem/Ihres.Ihres | Ihre.ihre/Ihre.ihre/Ihrer.ihrer/Ihrer.ihrer | Ihr.ihr/Ihr.ihr/Ihrem.ihrem/Ihres.ihres | Ihre.ihre/Ihre.ihre/Ihren.ihren/Ihrer.ihrer |
+| Ihr | euer/euren/eurem/eures | eure/eure/eurer/eurer | euer/euer/eurem/eures | eure/eure/euren/eurer |
+| Sie/sie| Ihr/ihren/ihrem/Ihres | Ihre/ihre/Ihrer/ihrer | Ihr/ihr/Ihrem/Ihres | Ihre/ihre/Ihren/ihrer |
