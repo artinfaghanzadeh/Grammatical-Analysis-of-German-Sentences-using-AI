@@ -1,7 +1,46 @@
-import operator
-import easyocr
+"""
+=================================================
+Grammatical Analysis of German Sentences using AI
+=================================================
 
-class Sentence:
+Description:
+This project aims to analyze the grammatical structure of German sentences using artificial intelligence (AI).
+The process involves multiple steps to ensure accurate results.
+
+Author:
+Artin Faghanzadeh
+
+Contact:
++98 920 929 0024 (Telegram)
+
+Version:
+0.0.1
+
+Date:
+2024-08-07
+
+License:
+This project is licensed under the MIT License - see the LICENSE file for details.
+"""
+from colorama import init, Fore, Style
+import operator
+import requests
+
+
+def print_logo():
+    init(autoreset=True)
+    print(Fore.LIGHTBLUE_EX + " _    _ __  __ ______ _ ______ _ ")
+    print(Fore.LIGHTBLUE_EX + "| |  | |  \/  |  ____| |  __  | |")
+    print(Fore.LIGHTBLUE_EX + "| |__| | \  / | |__  | | |  | | |")
+    print(Fore.LIGHTCYAN_EX + "|  __  | |\/| | |__| | | |  | | |")
+    print(Fore.LIGHTCYAN_EX + "| |  | | |  | | |    | | |__| | |")
+    print(Fore.LIGHTCYAN_EX + "|_|  |_|_|  |_|_|    |_|______|_|")
+    print(Fore.LIGHTMAGENTA_EX + "                                 ")
+    print(Fore.LIGHTMAGENTA_EX + "        Powered by Artin Faghanzadeh")
+    print(Style.RESET_ALL)  # Reset to default
+
+
+class SentenceManual:
     __list_article = ["der", "die", "das", "den", "dem", "des"]
 
     __dict_article_nom = {"maskulin": "der", "neutral": "das", "feminin": "die", "plural": "die"}
@@ -13,14 +52,14 @@ class Sentence:
 
     def __init__(self, sentence: str):
         self.__sentence = sentence
-        self.__splitted_sentence = [Sentence.__remove_sign(i) for i in self.__sentence.split(" ")]
+        self.__splitted_sentence = [SentenceManual.__remove_sign(i) for i in self.__sentence.split(" ")]
 
     @staticmethod
     def __remove_sign(word):
         str_1 = ""
         j = 0
         for i in range(len(word)):
-            if word[-1] in Sentence.__list_signs:
+            if word[-1] in SentenceManual.__list_signs:
                 str_1 = word[0:(len(word) - 1)]
                 word = str_1
                 j += 1
@@ -28,7 +67,7 @@ class Sentence:
             elif j == 0:
                 str_1 = word
 
-            elif word[-1] not in Sentence.__list_signs:
+            elif word[-1] not in SentenceManual.__list_signs:
                 break
         return str_1
 
@@ -64,36 +103,58 @@ class Sentence:
     def show(self):
         print(self.__find_article())
 
-class OCR:
-    def __init__(self, image_address, language="en"):
-        self.__image_address = image_address
-        self.__language = language
+class SentenceMuChat:
+    def __init__(self, mu_chat_url: str, authorization_api_token: str, prompt):
+        self.__mu_chat_url = mu_chat_url
+        self.__authorization_api_token = authorization_api_token
+        self.__prompt = prompt
+        self.__response = None
 
-    @property
-    def image_address(self):
-        return self.__image_address
+    def __posting(self):
+        url = self.__mu_chat_url
+        payload = {
+            "query": self.__prompt,
+            "temperature": 0.0,
+            "modelName": "gpt_3_5_turbo",
+        }
 
-    @property
-    def language(self):
-        return self.__language
+        headers = {
+            "Authorization": f"Bearer {self.__authorization_api_token}",
+            "Content-Type": "application/json"
+        }
 
-    def __read(self):
-        reader = easyocr.Reader([self.language])
-        self.__result = reader.readtext(self.__image_address)
+        self.__response = requests.request("POST", url, json=payload, headers=headers)
 
-    def show(self):
-        print(self.__result)
+    @staticmethod
+    def response_checking(response):
+        response_number = str(response).split(" ")[1].split(">")[0].split("[")[1].split("]")[0]
+
+        if int(response_number) == 200:
+            return SentenceMuChat.text_extraction(response.text)
+
+        else:
+            return int(response_number)
+
+    @staticmethod
+    def text_extraction(text):
+        list_1 = []
+        temp = text.split("{")[1]
+        temp_1 = temp[11:len(text.split("{")[1]) - 12]
+        for i in temp_1.split("\\n"):
+            list_1.append(i.split(":")[0][1:len(i.split(":")[0]) - 1])
+            list_1.append(i.split(":")[1][1:len(i.split(":")[1]) - 1])
+
+        return list_1
+
+    def result_showing(self):
+        SentenceMuChat.__posting(self)
+        return SentenceMuChat.response_checking(self.__response)
+
+class SentenceDatabase:
+    ...
 
 
-# s1 = Sentence("Ich habe das die die Buch")
-# s1.show()
-
-o1 = OCR('image.jpg')
-o1.show()
-
-"""
-try to make the list_no > 1 to give me the full info if i had 3 die or ... .
-
-"""
-
-
+print_logo()
+# s1 = SentenceMuChat("https://app.mu.chat/api/agents/clzk1jkth005viq0jty1y8kqp/query", "token", "prompt")
+# print(s1.result_showing())
+# ['Ich\\', '"Nomen, 1. Person, Singular\\', '"halte\\', '"Verben, 1. Person, Singular, Präsens, Nominativ\\', '"sehr\\', '"Adverb\\', '"viel\\', '"Adjektiv\\', '"von\\', '"Präposition\\', '"dem\\', '"bestimmter Artikel, maskulin, Dativ\\', '"Projekt\\', '"Nomen, neutra']
