@@ -25,7 +25,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 from colorama import init, Fore, Style
 import operator
 import requests
-
+import string
 
 def print_logo():
     init(autoreset=True)
@@ -40,6 +40,7 @@ def print_logo():
     print(Style.RESET_ALL)  # Reset to default
 
 
+# =============================
 class SentenceManual:
     __list_article = ["der", "die", "das", "den", "dem", "des"]
 
@@ -144,6 +145,14 @@ class SentenceMuChat:
             list_1.append(i.split(":")[0][1:len(i.split(":")[0]) - 1])
             list_1.append(i.split(":")[1][1:len(i.split(":")[1]) - 1])
 
+        list_letters = string.ascii_letters
+        for i in range(len(list_1)):
+            while list_1[i][0] not in list_letters:
+                list_1[i] = list_1[i][1: len(list_1[i])]
+
+            while list_1[i][-1] not in list_letters:
+                list_1[i] = list_1[i][0: len(list_1[i]) - 1]
+
         return list_1
 
     def result_showing(self):
@@ -154,7 +163,14 @@ class SentenceDatabase:
     ...
 
 
-print_logo()
-# s1 = SentenceMuChat("https://app.mu.chat/api/agents/clzk1jkth005viq0jty1y8kqp/query", "token", "prompt")
+
+
+# Mu-Chat AI
+
+# print_logo()
+# s1 = SentenceMuChat("https://app.mu.chat/api/agents/clzk1jkth005viq0jty1y8kqp/query",
+#                     "54aceadf-0045-4c64-963d-a66d6d9141fe",
+#                     "Ich halte sehr viel von dem Projekt.")
 # print(s1.result_showing())
-# ['Ich\\', '"Nomen, 1. Person, Singular\\', '"halte\\', '"Verben, 1. Person, Singular, Präsens, Nominativ\\', '"sehr\\', '"Adverb\\', '"viel\\', '"Adjektiv\\', '"von\\', '"Präposition\\', '"dem\\', '"bestimmter Artikel, maskulin, Dativ\\', '"Projekt\\', '"Nomen, neutra']
+# OUTPUT: ['Ich', 'Nomen, 1. Person, Singular', 'halte', 'Verben, 1. Person, Singular, Präsens, Nominativ', 'sehr', 'Adverb', 'viel', 'Adjektiv', 'von', 'Präposition', 'dem', 'bestimmter Artikel, maskulin, Dativ', 'Projekt', 'Nomen, neutra']
+
