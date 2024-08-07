@@ -2,6 +2,9 @@
 
 [Deutsch (German)](/docs/de/README.md) | [English](/docs/en/README.md)
 
+
+## Article table / Artikel tabelle
+### This is a normal definite article table for germany language and this the base of my program.
 |Artikel |Singular maskulin|Singular feminin|Singular neutral|Plural|
 | :---: | :---: | :---: | :---: | :---: |
 | Nominativ | der | die | das | die |
