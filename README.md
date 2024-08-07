@@ -3,11 +3,21 @@
 [Deutsch (German)](/docs/de/README.md) | [English](/docs/en/README.md)
 
 
-## Article table / Artikel tabelle
-### This is a normal definite article table(Der Bestimmte Artikel) for germany language and this is the basis of my program.
+## Definite article table / Bestimmte Artikeltabelle
+### This is a Definite article table(Die Bestimmte Artikeltabelle) for germany language and this is one of the basis of my program.
 |Artikel |Singular maskulin|Singular feminin|Singular neutral|Plural|
 | :---: | :---: | :---: | :---: | :---: |
 | Nominativ | der | die | das | die |
 | Akkusativ | den | die | das | die |
 | Dativ | dem | der | dem | den |
 | Genitiv | des | der | des | der |
+
+
+## Indefinite article table / Unbestimmte Artikeltabelle
+### This is a Definite article table(Die Bestimmte Artikeltabelle) for germany language and this is one of the basis of my program.
+|Artikel |Singular maskulin|Singular feminin|Singular neutral|Plural|
+| :---: | :---: | :---: | :---: | :---: |
+| Nominativ | ein | eine | ein | *** |
+| Akkusativ | einen | eine | ein | *** |
+| Dativ | einem | einer | einem | *** |
+| Genitiv | eines | einer | eines | *** |
