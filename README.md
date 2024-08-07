@@ -4,7 +4,7 @@
 
 
 ## Definite article table / Bestimmte Artikeltabelle
-### This is a Definite article table(Die Bestimmte Artikeltabelle) for germany language and this is one of the basis of my program.
+#### This is a Definite article table(Die Bestimmte Artikeltabelle) for germany language and this is one of the basis of my program.
 |Artikel |Singular maskulin|Singular feminin|Singular neutral|Plural|
 | :---: | :---: | :---: | :---: | :---: |
 | Nominativ | der | die | das | die |
@@ -14,7 +14,7 @@
 
 
 ## Indefinite article table / Unbestimmte Artikeltabelle
-### This is a Indefinite article table(Die Unbestimmte Artikeltabelle) for germany language and this is one of the basis of my program.
+#### This is a Indefinite article table(Die Unbestimmte Artikeltabelle) for germany language and this is one of the basis of my program.
 |Artikel |Singular maskulin|Singular feminin|Singular neutral|Plural|
 | :---: | :---: | :---: | :---: | :---: |
 | Nominativ | ein | eine | ein | *** |
@@ -24,7 +24,7 @@
 
 
 ## Possessive articles / Possessivartikel
-### This type of article is the last type of article that is included in this program.
+#### This type of article is the last type of article that is included in this program.
 |Possessivartikel |Maskulin|Feminin|Neutral|Plural|
 | :---: | :---: | :---: | :---: | :---: |
 | Ich | mein/meinen/meinem/meines | meine/meine/meiner/meiner | mein/mein/meinem/meines | meine/meine/meinen/meiner |
