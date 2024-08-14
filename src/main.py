@@ -14,7 +14,7 @@ Contact:
 +98 920 929 0024 (Telegram)
 
 Version:
-0.0.1
+0.0.12
 
 Date:
 2024-08-07
@@ -26,15 +26,17 @@ from colorama import init, Fore, Style
 import operator
 import requests
 import string
+import collections
+import pandas as pd
 
 def print_logo():
     init(autoreset=True)
-    print(Fore.LIGHTBLUE_EX + " _    _ __  __ ______ _ ______ _ ")
-    print(Fore.LIGHTBLUE_EX + "| |  | |  \/  |  ____| |  __  | |")
-    print(Fore.LIGHTBLUE_EX + "| |__| | \  / | |__  | | |  | | |")
-    print(Fore.LIGHTCYAN_EX + "|  __  | |\/| | |__| | | |  | | |")
-    print(Fore.LIGHTCYAN_EX + "| |  | | |  | | |    | | |__| | |")
-    print(Fore.LIGHTCYAN_EX + "|_|  |_|_|  |_|_|    |_|______|_|")
+    print(Fore.LIGHTBLUE_EX + " _    _ __  __ ______     ____  ______  ____")
+    print(Fore.LIGHTBLUE_EX + "| |  | |  \/  |  ____|   / / | |  __  | | \x5c \x5c")
+    print(Fore.LIGHTBLUE_EX + "| |__| | \  / | |__     /_/| | | |  | | | |\x5c_\x5c")
+    print(Fore.LIGHTCYAN_EX + "|  __  | |\/| | |__|       | | | |  | | | |")
+    print(Fore.LIGHTCYAN_EX + "| |  | | |  | | |          | | | |__| | | |")
+    print(Fore.LIGHTCYAN_EX + "|_|  |_|_|  |_|_|          |_| |______| |_|")
     print(Fore.LIGHTMAGENTA_EX + "                                 ")
     print(Fore.LIGHTMAGENTA_EX + "        Powered by Artin Faghanzadeh")
     print(Style.RESET_ALL)  # Reset to default
@@ -51,8 +53,17 @@ class SentenceManual:
 
     __list_signs = [",", "."]
 
-    def __init__(self, sentence: str):
+    __dict_personal_noun = {"ich": "1. Person, Singular", "du": "2. Person, Singular",
+                                "er": "3. Person, Singular, Maskulin", "sie": "3. Person, Singular, Feminin",
+                                "es": "3. Person, Singular, Neutral", "wir": "1. Person, Plural",
+                                "ihr": "2. Person, Plural", "Sie": "3. Person, Plural"}
+    __list_personal_noun = ["ich", "du", "er", "sie", "es", "wir", "ihr"]
+    __list_personal_noun_not_sie = ["ich", "du", "er", "es", "wir", "ihr"]
+
+
+    def __init__(self, sentence: str, verb_excel: str):
         self.__sentence = sentence
+        self.__verb_excel = verb_excel
         self.__splitted_sentence = [SentenceManual.__remove_sign(i) for i in self.__sentence.split(" ")]
 
     @staticmethod
@@ -71,6 +82,18 @@ class SentenceManual:
             elif word[-1] not in SentenceManual.__list_signs:
                 break
         return str_1
+
+    @staticmethod
+    def __lower(word: str):
+        list_temp = []
+        for i in word:
+            if 90 >= ord(i) >= 65:
+                list_temp.append(chr(ord(i) + 32))
+
+            else:
+                list_temp.append(i)
+
+        return "".join(list_temp)
 
     def __find_article(self):
         no = operator.countOf(self.__splitted_sentence, "der") +\
@@ -101,8 +124,157 @@ class SentenceManual:
 
             return list_article
 
+    def __find_noun(self):
+        list_noun = []
+        list_sentences_personal_noun = []
+        dict_defined_personal_noun = collections.defaultdict(object)
+        dict_defined_personal_noun_sie = collections.defaultdict(object)
+
+        for i in range(len(self.__splitted_sentence)):
+            if (self.__splitted_sentence[i] != SentenceManual.__lower(self.__splitted_sentence[i]) and
+                    SentenceManual.__lower(self.__splitted_sentence[i]) not in self.__list_personal_noun):
+
+                list_noun.append(self.__splitted_sentence[i])
+
+            if SentenceManual.__lower(self.__splitted_sentence[i]) in self.__list_personal_noun:
+                list_sentences_personal_noun.append(self.__splitted_sentence[i])
+
+        if len(list_sentences_personal_noun) > 0:
+            for i in list_sentences_personal_noun:
+                if self.__lower(i) in self.__list_personal_noun_not_sie:
+                    dict_defined_personal_noun[i] = self.__dict_personal_noun[self.__lower(i)]
+
+                if self.__lower(i) == "sie":        # sie: plural, singular (by verb)
+                    ...
+
+        return f"{list_noun}\t\t{list_sentences_personal_noun}\t\t{dict_defined_personal_noun}"
+
+    def __find_verb(self):
+        verb_name = (i for i in pd.read_excel(self.__verb_excel, usecols=[0]).iloc[:, 0])
+
+        def read_column(file_path: str, column_number: int):
+            counter_row_1 = 0
+            df = pd.read_excel(file_path, usecols=[column_number])
+
+            for value in df.iloc[:, 0]:
+                yield [value, counter_row_1]
+                counter_row_1 += 1
+
+        def modal_check(list_a, person: str):
+            match person:
+                case "1. Person, Singular":
+                    for value in read_column(self.__verb_excel, 1):
+                        if SentenceManual.__lower(list_a[0]) == value[0]:
+                            return [next(verb_name), SentenceManual.__lower(list_a[0]), "1. Person, Singular"]
+
+                        next(verb_name)
+
+                        if value[1] == "mögen kii":
+                            return False
+
+                case "2. Person, Singular":
+                    for value in read_column(self.__verb_excel, 2):
+                        if SentenceManual.__lower(list_a[0]) == value[0]:
+                            return [next(verb_name), SentenceManual.__lower(list_a[0]), "2. Person, Singular"]
+
+                        next(verb_name)
+
+                        if value[1] == "mögen kii":
+                            return False
+
+                case "3. Person, Singular, Maskulin":
+                    for value in read_column(self.__verb_excel, 3):
+                        if SentenceManual.__lower(list_a[0]) == value[0]:
+                            return [next(verb_name), SentenceManual.__lower(list_a[0]), "3. Person, Singular, Maskulin"]
+
+                        next(verb_name)
+
+                        if value[1] == "mögen kii":
+                            return False
+                case "3. Person, Singular, Feminin":
+                    for value in read_column(self.__verb_excel, 3):
+                        if SentenceManual.__lower(list_a[0]) == value[0]:
+                            return [next(verb_name), SentenceManual.__lower(list_a[0]), "3. Person, Singular, Feminin"]
+
+                        next(verb_name)
+
+                        if value[1] == "mögen kii":
+                            return False
+                case "3. Person, Singular, Neutral":
+                    for value in read_column(self.__verb_excel, 3):
+                        if SentenceManual.__lower(list_a[0]) == value[0]:
+                            return [next(verb_name), SentenceManual.__lower(list_a[0]), "3. Person, Singular, Neutral"]
+
+                        next(verb_name)
+
+                        if value[1] == "mögen kii":
+                            return False
+
+                case "1. Person, Plural":
+                    for value in read_column(self.__verb_excel, 4):
+                        if SentenceManual.__lower(list_a[0]) == value[0]:
+                            return [next(verb_name), SentenceManual.__lower(list_a[0]), "1. Person, Plural"]
+
+                        next(verb_name)
+
+                        if value[1] == "mögen kii":
+                            return False
+
+                case "2. Person, Plural":
+                    for value in read_column(self.__verb_excel, 5):
+                        if SentenceManual.__lower(list_a[0]) == value[0]:
+                            return [next(verb_name), SentenceManual.__lower(list_a[0]), "2. Person, Plural"]
+
+                        next(verb_name)
+
+                        if value[1] == "mögen kii":
+                            return False
+
+                case "3. Person, Plural":
+                    for value in read_column(self.__verb_excel, 6):
+                        if SentenceManual.__lower(list_a[0]) == value[0]:
+                            return [next(verb_name), SentenceManual.__lower(list_a[0]), "3. Person, Plural"]
+
+                        next(verb_name)
+
+                        if value[1] == "mögen kii":
+                            return False
+
+        list_verb_possibility = [self.__splitted_sentence[0], self.__splitted_sentence[1], self.__splitted_sentence[-1]]
+        person = str
+
+        for i in list_verb_possibility:
+            if i == self.__splitted_sentence[0]:
+                if i in list(self.__dict_personal_noun.keys()):
+                    person = self.__dict_personal_noun[i]
+                    list_verb_possibility.remove(i)
+                    continue
+
+                elif SentenceManual.__lower(i) in list(self.__dict_personal_noun.keys()):
+                    person = self.__dict_personal_noun[SentenceManual.__lower(i)]
+                    list_verb_possibility.remove(i)
+                    continue
+
+            elif i != self.__splitted_sentence[0]:
+                if i in list(self.__dict_personal_noun.keys()):
+                    person = self.__dict_personal_noun[i]
+                    list_verb_possibility.remove(i)
+                    continue
+
+                elif 65 <= ord(i[0]) <= 90 and i != self.__splitted_sentence[0]:
+                    list_verb_possibility.remove(i)
+
+        if modal_check(list_verb_possibility, person) != None:
+            """
+            print the other verb
+            """
+            return modal_check(list_verb_possibility, person)
+
+        else:
+            ...
+
     def show(self):
-        print(self.__find_article())
+        print(self.__find_verb())
 
 class SentenceMuChat:
     def __init__(self, mu_chat_url: str, authorization_api_token: str, prompt):
@@ -158,19 +330,16 @@ class SentenceMuChat:
     def result_showing(self):
         SentenceMuChat.__posting(self)
         return SentenceMuChat.response_checking(self.__response)
+# Mu-Chat AI
+# print_logo()
+# s1 = SentenceMuChat("https://app.mu.chat/api/agents/clzk1jkth005viq0jty1y8kqp/query",
+#                     "Secure_API",
+#                     "Sentence")       # like "Ich halte sehr viel von dem Projekt."
+# print(s1.result_showing())
+# OUTPUT: ['Ich', 'Nomen, 1. Person, Singular', 'halte', 'Verben, 1. Person, Singular, Präsens, Nominativ', 'sehr', 'Adverb', 'viel', 'Adjektiv', 'von', 'Präposition', 'dem', 'bestimmter Artikel, maskulin, Dativ', 'Projekt', 'Nomen, neutra']
 
 class SentenceDatabase:
     ...
 
-
-
-
-# Mu-Chat AI
-
-# print_logo()
-# s1 = SentenceMuChat("https://app.mu.chat/api/agents/clzk1jkth005viq0jty1y8kqp/query",
-#                     "54aceadf-0045-4c64-963d-a66d6d9141fe",
-#                     "Ich halte sehr viel von dem Projekt.")
-# print(s1.result_showing())
-# OUTPUT: ['Ich', 'Nomen, 1. Person, Singular', 'halte', 'Verben, 1. Person, Singular, Präsens, Nominativ', 'sehr', 'Adverb', 'viel', 'Adjektiv', 'von', 'Präposition', 'dem', 'bestimmter Artikel, maskulin, Dativ', 'Projekt', 'Nomen, neutra']
-
+s1 = SentenceManual("machst du das zukaufen.", "Verb.xlsx")
+s1.show()
